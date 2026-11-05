@@ -1,6 +1,6 @@
 /* ===== STATE ===== */
 const AMP_STATE = Object.fromEntries(Object.entries(AMPS).map(([k, a]) => [k, {...a.k}]));
-const S = {sel: 'fm', ref: true, env: 'studio', tab: 'unit', an: null};
+const S = {sel: 'fm', ref: true, env: 'studio', tab: 'unit', an: null, view: 'edit'};
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const unit = id => CHAIN.find(u => u.id === id);
@@ -17,8 +17,8 @@ syncAmp();
 const G = () => GUITARS[unit('gtr').guitar];
 const A = () => AMPS[unit('amp').amp];
 function meta(u) {
-  if (u.type === 'guitar') { const g = G(); return {name: g.short, full: g.name, maker: g.maker, kind: g.spec, knobs: [['vol', 'VOL'], ['tone', 'TONE'], PU_SW], method: g.method, src: g.src}; }
-  if (u.type === 'amp') { const a = A(); return {name: a.short, full: a.name, maker: a.maker, kind: A().name + (u.k.input === 'return' ? ' · RETURN 接続（パワー段のみ）' : ' · INPUT 接続'), knobs: a.knobs, method: a.method, src: a.src}; }
+  if (u.type === 'guitar') { const g = GUITARS[u.guitar]; return {name: g.short, full: g.name, maker: g.maker, kind: g.spec, knobs: [['vol', 'VOL'], ['tone', 'TONE'], PU_SW], method: g.method, src: g.src}; }
+  if (u.type === 'amp') { const a = AMPS[u.amp]; return {name: a.short, full: a.name, maker: a.maker, kind: a.name + (u.k.input === 'return' ? ' · RETURN 接続（パワー段のみ）' : ' · INPUT 接続'), knobs: a.knobs, method: a.method, src: a.src}; }
   if (u.type === 'cab') {
     const jc = u.model === 'jc';
     return {name: jc ? '12" ×2' : '10" ×4', full: (jc ? 'JC-120 内蔵 12 インチ×2' : 'DeVille 410 内蔵 10 インチ×4'), maker: 'スピーカー・マイク', kind: 'オープンバック・コンボ',
@@ -102,6 +102,7 @@ document.addEventListener('keydown', e => {
     const st = (s.kind === 'knob' ? 0.25 : s.step) * (e.shiftKey ? 4 : 1), cur = u.k[s.key];
     setParam(u.id, s.key, {ArrowUp: cur + st, ArrowRight: cur + st, ArrowDown: cur - st, ArrowLeft: cur - st, Home: s.min, End: s.max}[e.key]); return;
   }
+  if (S.view !== 'edit') return;
   const order = CHAIN.map(u => u.id), i = order.indexOf(S.sel);
   switch (e.key) {
     case ']': S.sel = order[Math.min(order.length - 1, i + 1)]; break;

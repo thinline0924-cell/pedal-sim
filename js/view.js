@@ -1,7 +1,9 @@
 /* ===== PLOTS ===== */
 const ROOT = document.documentElement;
-const P = n => getComputedStyle(ROOT).getPropertyValue('--' + n).trim();
+let CS = getComputedStyle(ROOT);   // palette comes from the canvas being drawn (dark app / light sheet)
+const P = n => CS.getPropertyValue('--' + n).trim();
 function prep(cv) {
+  CS = getComputedStyle(cv);
   const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
   const w = Math.max(10, Math.round(r.width)), h = Math.max(10, Math.round(r.height));
   if (cv.width !== w * dpr || cv.height !== h * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
@@ -227,8 +229,6 @@ function update(full) {
   $('#sb-power').textContent = `DC ${pd.total} mA ＋ 未取得 ${pd.unknown.length} 台 · AC ${A().acW} W`;
   $('#sb-sel').textContent = meta(unit(S.sel)).name;
   draw();
+  afterUpdate();
 }
-function draw() { $$('canvas[data-plot]').forEach(cv => PLOTS[cv.dataset.plot](cv, S.an)); }
-buildStrip();
-new ResizeObserver(() => S.an && draw()).observe($('#work'));
-update(true);
+function draw() { if (S.view === 'edit') $$('#view-edit canvas[data-plot]').forEach(cv => PLOTS[cv.dataset.plot](cv, S.an)); }
