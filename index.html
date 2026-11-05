@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rig Bench</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="tb">
+  <span class="app">Rig Bench</span>
+  <label class="fld">パッチ <select id="sel-patch"><option>01 クリーン + FIRE MIST（RETURN）</option></select></label>
+  <label class="fld">環境 <select id="sel-env"><option value="studio">リハスタ</option><option value="live">ライブハウス</option><option value="rec">レコーディング</option></select></label>
+  <button type="button" class="btn" id="ref-btn" data-ref aria-pressed="true">参考音源を重ねる</button>
+  <span class="sp"></span>
+  <button type="button" class="btn" disabled title="次の段階で実装">音源を解析…</button>
+  <button type="button" class="btn" disabled title="次の段階で実装">セッティングシート</button>
+</header>
+<div class="strip-wrap"><div id="strip"></div></div>
+<div class="work" id="work">
+  <main class="ana">
+    <section class="pn">
+      <div class="pn-t"><b>周波数特性</b><span class="note">1 kHz = 0 dB · 小信号＋クリップ推定</span>
+        <span class="key"><span><i></i>出力</span><span><i class="k2"></i><span id="sb-sel"></span> まで</span><span><i class="k3"></i>参考音源 sample_ref.wav 0:42–0:58</span></span></div>
+      <canvas class="c-fr" data-plot="fr"></canvas>
+      <div class="bands" id="bands"></div>
+    </section>
+    <div class="trio">
+      <section class="pn"><div class="pn-t"><b>ゲインステージ</b><span class="note">dBu · 赤 = クリップ量 · 横線 = 上限</span></div><canvas class="c-sm" data-plot="gain"></canvas></section>
+      <section class="pn"><div class="pn-t"><b>倍音</b><span class="key"><span><i class="sq" style="background:var(--trace)"></i>偶数次</span><span><i class="sq" style="background:var(--trace-2)"></i>奇数次</span></span></div><canvas class="c-sm" data-plot="harm"></canvas></section>
+      <section class="pn"><div class="pn-t"><b>時間変化</b><span class="note">単音 · 実線 合計 / 青 ディレイ / 点線 リバーブ</span></div><canvas class="c-sm" data-plot="time"></canvas></section>
+    </div>
+    <div class="readouts" id="readouts"></div>
+  </main>
+  <aside class="insp">
+    <div class="tabs" role="tablist"><button type="button" class="tab" role="tab" data-tab="unit">機材</button><button type="button" class="tab" role="tab" data-tab="power">電源</button></div>
+    <div id="insp-body"></div>
+  </aside>
+</div>
+<footer class="sb">
+  <span id="sb-power"></span>
+  <span>周波数 240 点 · 値は暫定（読み取り元の「要確認」「未取得」を参照）</span>
+  <span class="keys"><span><kbd>[</kbd><kbd>]</kbd>機材</span><span><kbd>B</kbd>ON/OFF</span><span><kbd>↑</kbd><kbd>↓</kbd>値</span><span><kbd>Shift</kbd>微調整</span><span><kbd>R</kbd>参考音源</span><span><kbd>E</kbd>環境</span><span><kbd>P</kbd>電源</span></span>
+</footer>
+
+<script src="js/engine.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/view.js"></script>
+</body>
+</html>

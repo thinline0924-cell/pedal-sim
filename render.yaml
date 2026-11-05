@@ -1,0 +1,12 @@
+# Render Blueprint（静的サイトとして公開する設定）
+# ファイルをそのまま配るだけなので、ビルドや API キーの設定は不要
+services:
+  - type: web
+    name: pedal-sim
+    runtime: static
+    buildCommand: echo "ビルドは不要です"
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
